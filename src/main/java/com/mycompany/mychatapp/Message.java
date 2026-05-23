@@ -31,8 +31,8 @@ public class Message {
     
     private String createMessageID(){
         Random random = new Random ();
-        long id = (long) random.nextInt(1000000000) + 1000000000;
-        return String.valueOf(id);
+         messageID = String.valueOf(random.nextInt(10));
+        return messageID != null && messageID.length() == 10;
     }
         
     public boolean checkMessageID(){
