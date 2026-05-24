@@ -16,30 +16,29 @@ public class Message {
     private String messageText;
     private String messageHash;
     
-    
     private static String[] sentMessages;
     private static int messageIndex = 0;
-    private static int totalMessagesSent = 0;
+    private static int totalMessages = 0;
     
-    public Message(int messageNumber) {
+    public Message( int messageNumber, String recipientCell, String messageText) {
         this.messageNumber = messageNumber;
         this.recipientCell = recipientCell;
         this.messageText = messageText;
-        this.messageHash = generateMessageHash();
         this.messageID = createMessageID();
+        this.messageHash = createMessageHash();
+        if (sentMessages == null) {
+            sentMessages = new String[totalMessages];
+        }
     }
     
     private String createMessageID(){
         Random random = new Random ();
-         messageID = String.valueOf(random.nextInt(10));
-        return messageID != null && messageID.length() == 10;
-    }
-        
-    public boolean checkMessageID(){
-      return messageID.length() == 10;
+        long id = (long) random.nextInt(1000000000) + 1000000000;
+        return String.valueOf(id);
+         
     }
     
-    public String generateMessageHash(){
+    public String createMessageHash(){
         //Taking the first two characters of the message ID
         String idPart = messageID.substring(0, 2);
         
@@ -75,19 +74,19 @@ public class Message {
             case 1:
                 sentMessages[messageIndex] = printMessage();
                 messageIndex++;
-                totalMessagesSent++;
+                totalMessages++;
                 return"Message successfully sent";
             case 2:
                 return"Press 0 to delete the message";
             case 3:
-                storeMessage(messageID, recipientCell, messageText);
+                storeMessage(messageID, messageHash, recipientCell, messageText);
                 return"Message successfully stored";
             default:
                 return"Invalid option. Please choose option 1, 2, or 3";
         }
     }
     //we are checking if the message length is correct or not and returning the response messages.
-    public String checkMessageLength(int messageNumber, String recipientCell, String messageText){
+    public String checkMessageLength(){
         if (messageText.length() > 250){
             int over = messageText.length() - 250;
             return "Message exceeds 250 characters by X" + over + "; please reduce the size.";
@@ -104,10 +103,21 @@ public class Message {
     }
     
     public int returnTotalMessages() {
-        return totalMessagesSent;
+        return totalMessages;
     }
     
-    public void storeMessage(String messageID, String recipientCell, String messageText) {  
+    public static String getAllSentMessages() {
+        if (messageIndex ==0) {
+            return "No message sent yet.";
+        }
+        String result = "";
+        for (int i = 0; i < messageIndex; i++){
+            result += sentMessages[i] + "\n===========\n";
+        }
+        return "";
+    }
+    
+    public void storeMessage(String messageID, String messageHash, String recipientCell, String messageText) {  
         JSONObject obj = new JSONObject();
             obj.put("messageID", this.messageID); 
             obj.put("recipientCell", this.recipientCell); 

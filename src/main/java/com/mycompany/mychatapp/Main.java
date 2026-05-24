@@ -14,8 +14,6 @@ package com.mycompany.mychatapp;
 //imports the Scanner class so we can take input from the user
 import java.util.Scanner;
 
-import java.util.Scanner;
-
 /**
  *
  * @author Student
@@ -71,7 +69,7 @@ public class Main {
             System.out.println("=====================");
             
             boolean running = true;
-            
+            int totalMessagesSent = 0;
             /*
              an object of the message class is being created, 
              so we can call its methods
@@ -89,6 +87,8 @@ public class Main {
                 int choice = input.nextInt();
                 input.nextLine();
                 
+                Message msg = null;
+                
                 switch(choice) {
                     case 1:
                         //we asking the user to enter how mny messages they wish to send.
@@ -99,7 +99,6 @@ public class Main {
                         ////loops according to the number of messages the user will be sending
                         for(int i = 0; i < numMessages; i++){
                             int messageNumber = i + 1;
-                            Message msg = new Message(messageNumber);
                         
                             System.out.println("--- Message " + messageNumber + " ---");
                             
@@ -107,24 +106,25 @@ public class Main {
                             System.out.println("Enter recipient cell phone number: ");
                             String recipientCell = input.nextLine();
                             
-                            //checkRecipientCell method gets called and the message it returns gets stored
-                            String feedback = msg.checkRecipientCell();
-                            System.out.println(feedback);
-                            
                             //we are prompting the user to type the message they want to send
                             System.out.println("Enter your message: ");
                             String messageText = input.nextLine();
+                           
+                            msg = new Message(messageNumber, recipientCell, "");
                             
-                            //we are checking if the message length is correct or not and displaying the response messages.
-                            System.out.println(msg.checkMessageLength(messageNumber, recipientCell, messageText));
+                            System.out.println(msg.checkMessageLength());
+                            
                             if (messageText.length() > 250){
-                                int over = messageText.length() - 250;
-                                System.out.println("Message exceeds 250 characters by X" + over + "; please reduce the size.");
-                            }else{
-                                System.out.println("Message ready to send.");
-                            }
+                                
+                                System.out.println(msg.checkRecipientCell());
+                                
+                                String results = msg.sentMesssage();
+                                System.out.println(results);
                             
+                                System.out.println(msg.printMessage());
+                            }
                         }
+                         System.out.println("Total messages sent are: " + msg.returnTotalMessages());
                         break;
                      case 2: 
                         System.out.println("Comming Soon.");

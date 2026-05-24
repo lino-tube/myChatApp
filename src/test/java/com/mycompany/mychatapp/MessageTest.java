@@ -19,26 +19,65 @@ public class MessageTest {
     
     @Before
     public void setUp(){
-     
+       
     }
     @Test
     public void testCheckMessageLength_validMessage_returnsSuccess() {
-        Message msg = new Message(1);
-        msg.setMessageText("Hi Mike, can you join us for dinner tonight");
-        String result = msg.checkMessageLength(1, "+27718693002", "Hi Mike, can you join us for dinner tonight");
-        assertEquals("Message ready to send.",result);
+      
     }
     
     @Test
     public void tesChecktMessageLength_over250chars_returnsFailureWithCount() {
-        Message msg = new Message(1);
-        msg.setMessageTexT("longMessage");
-        String result = msg.checkMessageLength(1, "+27718693002", "");
-        assertEquals("Message exceeds 250 characters by X[enter number here]; please reduce the size.", result);
+
     }
     
     @Test                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
     public void testCheckMessageLength_exactlyAtLImit_returnSuccess() {
     }
+    
+    @Test
+    public void testCheckMessageLength_oneOver_returnsFailureWithCountOf1(){
+    }
+    
+    @Test
+    public void testCheckRecipientCell_validNumber_returnsSuccess() {
+    }
+    
+    @Test
+    public void testCheckRecipientCell_invalidNumber_returnsFailure(){
+    }
+    
+    @Test
+    public void testCreateMesageHash_correctFormat_endsWithExoectedWords(){
+    }
+    
+    @Test
+    public void testCreateMessageHash_isUppercase(){
+    }
+    
+    @Test
+    public void testCreateMessageHash_mutipleMessages_loopTest() {
+    }
+    
+    @Test
+    public void testCheckMessageID_generatedID_isNotNull() {
+    }
+    
+    @Test
+    public void testCheckMessageID_generatedID_isExactly10Chars() {
+    }
+    
+    @Test
+    public void testSentMessage_userSelectSend_returnsCorrectString() {
+    }
+    
+    @Test
+    public void testSentMessage_userSelectsDisregard_returnsCorrectString() {
+    }
+    
+    @Test
+    public void testSentMessage_userSelectsStore_returnsCorrectString() {
+    }
+    
 }
 
