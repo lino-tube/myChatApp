@@ -8,6 +8,7 @@ import java.util.Random;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.io.FileWriter;
+import java.util.Scanner;
 
 public class Message {
     private String messageID;
@@ -16,8 +17,6 @@ public class Message {
     private String messageText;
     private String messageHash;
     
-    private static String[] sentMessages;
-    private static int messageIndex = 0;
     private static int totalMessages = 0;
     
     public Message( int messageNumber, String recipientCell, String messageText) {
@@ -26,9 +25,6 @@ public class Message {
         this.messageText = messageText;
         this.messageID = createMessageID();
         this.messageHash = createMessageHash();
-        if (sentMessages == null) {
-            sentMessages = new String[totalMessages];
-        }
     }
     
     private String createMessageID(){
@@ -44,8 +40,8 @@ public class Message {
         
         //In order to find the first and last words, we must split the message into words.
         String[] words = messageText.split(" ");
-        String firstWord = words[0];
-        String lastWord = words[words.length - 1];
+        String firstWord = words[0].replaceAll("[^a-zA-Z]", "");
+        String lastWord = words[words.length - 1].replaceAll("[^a-zA-Z]", "");
         
         //combine the idPart, messageNumber, firstWord and lastWord together, to form a message hash
         String hash = idPart + ":" + messageNumber + ":" + firstWord + lastWord;
@@ -63,26 +59,29 @@ public class Message {
     }
     
     public String sentMesssage() {
-        System.out.println("What would yoou like to do with your message?");
+        
+        Scanner input = new Scanner(System.in);
+        
+        System.out.println("\nWhat would yoou like to do with your message?");
         System.out.println("1) Send Message");
         System.out.println("2) Disregard Message");
         System.out.println("3) Store Message to send later");
         
-        int option = 0;
+        int option = input.nextInt();
+
         
         switch(option) {
             case 1:
-                sentMessages[messageIndex] = printMessage();
-                messageIndex++;
                 totalMessages++;
                 return"Message successfully sent";
             case 2:
                 return"Press 0 to delete the message";
             case 3:
-                storeMessage(messageID, messageHash, recipientCell, messageText);
+                storeMessage();
+                System.out.println("Mesage saved to messages.json.");
                 return"Message successfully stored";
             default:
-                return"Invalid option. Please choose option 1, 2, or 3";
+                return"\nInvalid option. Please choose option 1, 2, or 3";
         }
     }
     //we are checking if the message length is correct or not and returning the response messages.
@@ -106,18 +105,9 @@ public class Message {
         return totalMessages;
     }
     
-    public static String getAllSentMessages() {
-        if (messageIndex ==0) {
-            return "No message sent yet.";
-        }
-        String result = "";
-        for (int i = 0; i < messageIndex; i++){
-            result += sentMessages[i] + "\n===========\n";
-        }
-        return "";
-    }
-    
-    public void storeMessage(String messageID, String messageHash, String recipientCell, String messageText) {  
+    //JSON library used: org.json
+    //Source: https://mvnrespository.com/artifact/org.json/json 
+    public void storeMessage() {  
         JSONObject obj = new JSONObject();
             obj.put("messageID", this.messageID); 
             obj.put("recipientCell", this.recipientCell); 

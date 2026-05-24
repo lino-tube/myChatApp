@@ -62,11 +62,14 @@ public class Main {
         //loginUser method gets called to check if the details entered matches the stored ones
         boolean loggedIn = login.loginUser(loginUsername, loginPassword);
         
+        String loginMessage = login.returnLoginStatus(loggedIn);
+        System.out.println(loginMessage);
+        
         if(loggedIn) {
             //if the user has logged in successfully, we welcome them to the chatapp
-            System.out.println("=====================");
-            System.out.println("WELCOME TO QUICKCHAT.");
-            System.out.println("=====================");
+            System.out.println("=============================");
+            System.out.println(    "WELCOME TO QUICKCHAT."    );
+            System.out.println("=============================");
             
             boolean running = true;
             int totalMessagesSent = 0;
@@ -92,7 +95,7 @@ public class Main {
                 switch(choice) {
                     case 1:
                         //we asking the user to enter how mny messages they wish to send.
-                        System.out.println("How many messages would you like to send?");
+                        System.out.println("\nHow many messages would you like to send?");
                         int numMessages = input.nextInt();
                         input.nextLine();
                         
@@ -100,17 +103,17 @@ public class Main {
                         for(int i = 0; i < numMessages; i++){
                             int messageNumber = i + 1;
                         
-                            System.out.println("--- Message " + messageNumber + " ---");
+                            System.out.println("\n=== Message " + messageNumber + " of " + numMessages + "===");
                             
                             //we are prompting the user to enter the number of the person or people they sending messages to
                             System.out.println("Enter recipient cell phone number: ");
                             String recipientCell = input.nextLine();
                             
                             //we are prompting the user to type the message they want to send
-                            System.out.println("Enter your message: ");
+                            System.out.println("Enter your message(max 250 characters): ");
                             String messageText = input.nextLine();
                            
-                            msg = new Message(messageNumber, recipientCell, "");
+                            msg = new Message(messageNumber, recipientCell, messageText);
                             
                             System.out.println(msg.checkMessageLength());
                             
@@ -120,11 +123,20 @@ public class Main {
                                 
                                 String results = msg.sentMesssage();
                                 System.out.println(results);
-                            
-                                System.out.println(msg.printMessage());
                             }
+                            
+                            String result = msg.createMessageHash();
+                                System.out.println("\nMessage Hash: " + result);
+                                
+                            System.out.println("\n------MESSAGE DETAILS------");
+                            String Results = msg.printMessage();
+                                System.out.println(Results);
+                                
+                            String Result = msg.sentMesssage();
+                                System.out.println(Result);
                         }
-                         System.out.println("Total messages sent are: " + msg.returnTotalMessages());
+                        System.out.println("\n=====================================================");
+                        System.out.println("Total messages sent are: " + msg.returnTotalMessages());
                         break;
                      case 2: 
                         System.out.println("Comming Soon.");
