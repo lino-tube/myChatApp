@@ -16,7 +16,9 @@ package com.mycompany.mychatapp;
  * @author Student
  */
 public class Login {
+    String firstName;
     
+    String lastName;
     //this is where the user will store their user name
     String username;
     
@@ -25,7 +27,6 @@ public class Login {
     
     //this is where the user will store their number
     String phoneNumber;
-    
     //check whether the username is correct or not
     public boolean checkUserName(String username){
     //username must contain an underscore(_)
@@ -73,7 +74,7 @@ public class Login {
    } 
    
    //checks whether the user details have been successfully registered
-   public String registerUser(String username, String password, String phoneNumber) {
+   public String registerUser(String username, String password, String phoneNumber, String firstName, String lastName) {
    
        /*
         *Confirms whether the user detials are correct,

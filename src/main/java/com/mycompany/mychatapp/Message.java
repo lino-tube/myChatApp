@@ -34,6 +34,10 @@ public class Message {
          
     }
     
+    public boolean checkMessageID() {
+        return messageID.length() ==10;
+    }
+    
     public String createMessageHash(){
         //Taking the first two characters of the message ID
         String idPart = messageID.substring(0, 2);

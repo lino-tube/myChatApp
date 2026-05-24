@@ -32,22 +32,62 @@ public class Main {
         */
         Login login = new Login();
         
+        System.out.println("=============================");
+        System.out.println(    "WELCOME TO CHATAPP."    );
+        System.out.println("=============================");
+        
         //user registration process for the chat app
-        System.out.println("=== USER REGISTRATION ===");
+        System.out.println("\n=== USER REGISTRATION ===");
         
-        System.out.println("Enter a username: ");
-        String username = input.nextLine();
+        System.out.println("Enter your first name: ");
+        String firstName = input.nextLine();
         
-        System.out.println("Enter a password: ");
-        String password = input.nextLine();
+        System.out.println("Enter your last name: ");
+        String lastName = input.nextLine();
         
-        System.out.println("Enter your South African phone number (+27...): ");
-        String phoneNumber = input.nextLine();
+        while(true){
+            
+            System.out.println("Enter a username(must contain an underscore(_) and be 5 characters max): ");
+            String username = input.nextLine();
+            
+            if(login.checkUserName(username)){
+                System.out.println("Username successfully captured.");
+                
+                break;
+                
+            } else {
+                System.out.println("Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.");
+            }
+        }
         
-        //registerUser method gets called and the message it returns gets stored
-        String response = login.registerUser(username, password, phoneNumber);
+        while(true){
+            
+            System.out.println("Enter a password( must contain a minimum of 8 characters, 1 capital letter, 1 number, and 1 special): ");
+            String password = input.nextLine();
+            
+            if(login.checkPasswordComplexity(password)){
+                System.out.println("Password successfully captured.");
+                
+                break;
+            } else {
+                System.out.println("Password is not correctly formatted; please ensure that the password contains at least eight characters, a capital letter, a number, and a special character.");
+            }
+        }
         
-        //registration message is being shown
+        while(true){
+            System.out.println("Enter your South African phone number (must include an international code e.g. +27875678907): ");
+            String phoneNumber = input.nextLine();
+            
+            if(login.checkCellPhoneNumber(phoneNumber)){
+                System.out.println("Cell phone number successfully added.");
+                
+                break;
+            } else{
+                System.out.println("Cell number is incorrectly formatted or does not contain an international code; please correct the number and try again.");
+            }
+        }
+        String response = login.registerUser(username, password, phoneNumber, firstName, lastName);
+        
         System.out.println(response);
         
         //user login process for the chat app 
@@ -67,9 +107,7 @@ public class Main {
         
         if(loggedIn) {
             //if the user has logged in successfully, we welcome them to the chatapp
-            System.out.println("=============================");
-            System.out.println(    "WELCOME TO QUICKCHAT."    );
-            System.out.println("=============================");
+            System.out.println("\nWelcome to ChatApp.");
             
             boolean running = true;
             int totalMessagesSent = 0;
@@ -79,13 +117,15 @@ public class Main {
             */
             
             while(running) {
+                System.out.println("\n--------------------------------------");
                 //display the menu choices to the user
+                System.out.println("Please choose an option: ");
                 System.out.println("1) Send Messages");
                 System.out.println("2) Show recently sent messages");
                 System.out.println("3) Quit");
                 
                 //We are prompting the user to enter their option(1, 2 or 3)
-                System.out.println("Choose an option: ");
+                System.out.println("Enter your choice: ");
                 //reads the user input 
                 int choice = input.nextInt();
                 input.nextLine();
@@ -103,10 +143,10 @@ public class Main {
                         for(int i = 0; i < numMessages; i++){
                             int messageNumber = i + 1;
                         
-                            System.out.println("\n=== Message " + messageNumber + " of " + numMessages + "===");
+                            System.out.println("\n=== Message " + messageNumber + " of " + numMessages + " ===");
                             
                             //we are prompting the user to enter the number of the person or people they sending messages to
-                            System.out.println("Enter recipient cell phone number: ");
+                            System.out.println("Enter recipient cell phone number(e.g. +27678907890): ");
                             String recipientCell = input.nextLine();
                             
                             //we are prompting the user to type the message they want to send
@@ -128,7 +168,7 @@ public class Main {
                             String result = msg.createMessageHash();
                                 System.out.println("\nMessage Hash: " + result);
                                 
-                            System.out.println("\n------MESSAGE DETAILS------");
+                            System.out.println("\n------ MESSAGE DETAILS ------");
                             String Results = msg.printMessage();
                                 System.out.println(Results);
                                 
@@ -136,13 +176,18 @@ public class Main {
                                 System.out.println(Result);
                         }
                         System.out.println("\n=====================================================");
-                        System.out.println("Total messages sent are: " + msg.returnTotalMessages());
+                        System.out.println("Total messages sent: " + msg.returnTotalMessages());
+                        
+                        System.out.println("\n=== ALL SENT MESSAGES ===");
+                        System.out.println("-------------------------------------");
+                        String Results = msg.printMessage();
+                        System.out.println(Results);
                         break;
                      case 2: 
                         System.out.println("Comming Soon.");
                         break;
                     case 3:  
-                        System.out.println("Thank you for using QuickChat.");
+                        System.out.println("Thank you for using QuickChat. Goodbye!");
                         running = false;
                         break;
                     default:
