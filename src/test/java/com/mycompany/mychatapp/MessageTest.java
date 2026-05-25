@@ -4,20 +4,20 @@
  */
 package com.mycompany.mychatapp;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author Linothando
+ * @author Student
  */
 public class MessageTest {
     
     private Message message1;
     private Message message2;
     
-    @Before
+    @BeforeEach
     public void setUp(){
        message1 = new Message(1, "+27718693002", "Hi Mike, can you join us for dinner tonight?");
        message2 = new Message(2, "08575975889", "Hi Keegan, did you receive the payment?");
@@ -34,7 +34,7 @@ public class MessageTest {
     public void tesChecktMessageLength_over250chars_returnsFailureWithCount() {
         String longMessage = "";
         
-        for (int i = 0; i <= 260; i++){
+        for (int i = 0; i < 260; i++){
             longMessage += "a";
         }
         Message msg = new Message (1, "+27718693002", longMessage);
@@ -47,7 +47,7 @@ public class MessageTest {
     public void testCheckMessageLength_exactlyAtLImit_returnSuccess() {
         String message250 = "";
         
-        for(int i = 0; i <= 250; i++){
+        for(int i = 0; i < 250; i++){
             message250 += "a";
         }
         Message msg = new Message(1, "+27718693002", message250);
@@ -60,7 +60,7 @@ public class MessageTest {
     public void testCheckMessageLength_oneOver_returnsFailureWithCountOf1(){
         String message251 = "";
         
-        for (int i = 0; i <= 251; i++){
+        for (int i = 0; i < 251; i++){
             message251 += "a";
         }
         Message msg = new Message(1, "+27718693002", message251);
@@ -146,7 +146,7 @@ public class MessageTest {
                 case 2:
                     return "Press 0 to delete the message.";
                 case 3: 
-                    return "Message sucessfully stored.";
+                    return "Message successfully stored.";
                 default:
                     return "Invalid option. Please choose option 1, 2, or 3";
             }

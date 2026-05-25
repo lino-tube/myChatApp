@@ -11,14 +11,21 @@ import java.io.FileWriter;
 import java.util.Scanner;
 
 public class Message {
+    
+    //These vaariables will used to store the details of each message
     private String messageID;
     private int messageNumber;
     private String recipientCell;
     private String messageText;
     private String messageHash;
     
+    //this is used to keep count of the total number of messages sent
     private static int totalMessages = 0;
     
+    /*
+     * Constructor used for creating a new Message object
+     * The message ID and message hash are automatically generated
+     */
     public Message(int messageNumber, String recipientCell, String messageText) {
         this.messageNumber = messageNumber;
         this.recipientCell = recipientCell;
@@ -27,11 +34,13 @@ public class Message {
         this.messageHash = createMessageHash();
     }
     
+    //generates a random 10-digit message ID.
     public String generateMessageID(){
         Random random = new Random ();
         
         String id = "";
         
+        //Loops 10 times to create the message id
         for (int i = 0; i < 10; i++){
             
             id += random.nextInt(10);
@@ -39,6 +48,7 @@ public class Message {
         return id;
     }
     
+    //checks if the message id contains 10 digits or less
     public boolean checkMessageID() {
         return messageID.length() <=10;
     }
@@ -62,7 +72,7 @@ public class Message {
         }else{
             int over = messageText.length() - 250;
             
-            return "Message exceeds 250 characters by X" + over + "; please reduce the size.";
+            return "Message exceeds 250 characters by " + over + "; please reduce the size.";
         }
     }
      
@@ -84,7 +94,6 @@ public class Message {
     public String sentMessage() {
         
         Scanner input = new Scanner(System.in);
-        
         System.out.println("\nWhat would yoou like to do with your message?");
         System.out.println("1) Send Message");
         System.out.println("2) Disregard Message");
@@ -103,7 +112,7 @@ public class Message {
                 System.out.println("Mesage saved to messages.json.");
                 return"Message successfully stored";
             default:
-                return"\nInvalid option. Please choose option 1, 2, or 3";
+                return"\nInvalid option. Please choose option 1, 2, or 3";    
         }
     }
     
@@ -119,7 +128,7 @@ public class Message {
     }
     
     //JSON library used: org.json
-    //Source: https://mvnrespository.com/artifact/org.json/json 
+    //Source: https://mvnrepository.com/artifact/org.json/json 
     public void storeMessage() {  
         JSONObject obj = new JSONObject();
             obj.put("messageID", this.messageID); 
