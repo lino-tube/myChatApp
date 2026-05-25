@@ -19,25 +19,53 @@ public class Message {
     
     private static int totalMessages = 0;
     
-    public Message( int messageNumber, String recipientCell, String messageText) {
+    public Message(int messageNumber, String recipientCell, String messageText) {
         this.messageNumber = messageNumber;
         this.recipientCell = recipientCell;
         this.messageText = messageText;
-        this.messageID = createMessageID();
+        this.messageID = generateMessageID();
         this.messageHash = createMessageHash();
     }
     
-    private String createMessageID(){
+    public String generateMessageID(){
         Random random = new Random ();
-        long id = (long) random.nextInt(1000000000) + 1000000000;
-        return String.valueOf(id);
-         
+        
+        String id = "";
+        
+        for (int i = 0; i < 10; i++){
+            
+            id += random.nextInt(10);
+        }
+        return id;
     }
     
     public boolean checkMessageID() {
-        return messageID.length() ==10;
+        return messageID.length() <=10;
     }
     
+    public String checkRecipientCell(){
+        
+        if(recipientCell.startsWith("+27") && recipientCell.length() <=12){
+            return"Cell phone number successfully captured.";
+        }else{
+            return"Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
+        }
+    }
+      
+    //we are checking if the message length is correct or not and returning the response messages.
+    public String checkMessageLength(){
+        
+        if (messageText.length() <= 250){
+            
+            return"Message ready to send.";
+      
+        }else{
+            int over = messageText.length() - 250;
+            
+            return "Message exceeds 250 characters by X" + over + "; please reduce the size.";
+        }
+    }
+     
     public String createMessageHash(){
         //Taking the first two characters of the message ID
         String idPart = messageID.substring(0, 2);
@@ -53,16 +81,7 @@ public class Message {
         return hash.toUpperCase();
     }
     
-     public String checkRecipientCell(){
-        
-        if(recipientCell.startsWith("+27") && recipientCell.length() <=12){
-            return"Cell phone number successfully captured.";
-        }else{
-            return"Cell phone number is incorrectly formatted or does not contain an international code. Please correct the number and try again.";
-        }
-    }
-    
-    public String sentMesssage() {
+    public String sentMessage() {
         
         Scanner input = new Scanner(System.in);
         
@@ -72,7 +91,6 @@ public class Message {
         System.out.println("3) Store Message to send later");
         
         int option = input.nextInt();
-
         
         switch(option) {
             case 1:
@@ -88,25 +106,16 @@ public class Message {
                 return"\nInvalid option. Please choose option 1, 2, or 3";
         }
     }
-    //we are checking if the message length is correct or not and returning the response messages.
-    public String checkMessageLength(){
-        if (messageText.length() > 250){
-            int over = messageText.length() - 250;
-            return "Message exceeds 250 characters by X" + over + "; please reduce the size.";
-        }else{
-            return"Message ready to send.";
-        }
-    }
-     
-    public String printMessage() {
-        return "Message ID: " + messageID + "\n" +
-                "Message Hash: " + messageHash + "\n" +
-                "Recipient: " + recipientCell + "\n" +
-                "Message: " + messageText;
+    
+    public static int returnTotalMessages() {
+        return totalMessages;
     }
     
-    public int returnTotalMessages() {
-        return totalMessages;
+    public String printMessage() {
+        return "Message ID: " + messageID +
+                "\nMessage Hash: " + messageHash +
+                "\nRecipient: " + recipientCell +
+                "\nMessage: " + messageText;
     }
     
     //JSON library used: org.json
@@ -117,8 +126,12 @@ public class Message {
             obj.put("recipientCell", this.recipientCell); 
             obj.put("messageText",   this.messageText); 
 
-        try (java.io.FileWriter fw = new java.io.FileWriter("messages.json", true)) {
+        try (FileWriter fw = new FileWriter("messages.json", true)) {
             fw.write(obj.toString());
+            fw.write("\n");
+            
+            fw.close();
+            
         } catch (IOException e){
             System.out.println("Error storing message: " + e.getMessage());
         }

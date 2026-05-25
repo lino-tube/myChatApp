@@ -13,6 +13,7 @@ package com.mycompany.mychatapp;
 
 //imports the Scanner class so we can take input from the user
 import java.util.Scanner;
+import java.util.ArrayList;
 
 /**
  *
@@ -45,25 +46,27 @@ public class Main {
         System.out.println("Enter your last name: ");
         String lastName = input.nextLine();
         
+        String username;
+        
         while(true){
             
             System.out.println("Enter a username(must contain an underscore(_) and be 5 characters max): ");
-            String username = input.nextLine();
+            username = input.nextLine();
             
             if(login.checkUserName(username)){
                 System.out.println("Username successfully captured.");
                 
                 break;
-                
             } else {
                 System.out.println("Username is not correctly formatted; please ensure that your username contains an underscore and is no more than five characters in length.");
             }
         }
         
+        String password;
+        
         while(true){
-            
-            System.out.println("Enter a password( must contain a minimum of 8 characters, 1 capital letter, 1 number, and 1 special): ");
-            String password = input.nextLine();
+            System.out.println("Enter a password( must contain at least 8 characters, 1 capital letter, 1 number, and 1 special): ");
+            password = input.nextLine();
             
             if(login.checkPasswordComplexity(password)){
                 System.out.println("Password successfully captured.");
@@ -74,48 +77,63 @@ public class Main {
             }
         }
         
-        while(true){
+        String phoneNumber;
+        
+        while(true) {
             System.out.println("Enter your South African phone number (must include an international code e.g. +27875678907): ");
-            String phoneNumber = input.nextLine();
+            phoneNumber = input.nextLine();
             
             if(login.checkCellPhoneNumber(phoneNumber)){
-                System.out.println("Cell phone number successfully added.");
+                System.out.println("Cell phone number successfully captured.");
                 
                 break;
-            } else{
+            } else {
                 System.out.println("Cell number is incorrectly formatted or does not contain an international code; please correct the number and try again.");
             }
         }
-        String response = login.registerUser(username, password, phoneNumber, firstName, lastName);
+        //registerUser method gets called and the message it returns gets stored
+        login.registerUser(username, password, phoneNumber);
         
-        System.out.println(response);
+        //registration message is being shown
+        System.out.println("Registration successful. Welcome, " + firstName + lastName + "!");
         
         //user login process for the chat app 
         System.out.println("\n=== USER LOGIN ===");
         
-        System.out.println("Enter your username: ");
-        String loginUsername = input.nextLine();
+        boolean loggedIn = false;
+        int attempts = 0;
         
-        System.out.println("Enter your password: ");
-        String loginPassword = input.nextLine();
+        while(!loggedIn && attempts < 3){
+            System.out.println("Enter your username: ");
+            String loginUsername = input.nextLine();
         
-        //loginUser method gets called to check if the details entered matches the stored ones
-        boolean loggedIn = login.loginUser(loginUsername, loginPassword);
+            System.out.println("Enter your password: ");
+            String loginPassword = input.nextLine();
         
-        String loginMessage = login.returnLoginStatus(loggedIn);
-        System.out.println(loginMessage);
+            //loginUser method gets called to check if the details entered matches the stored ones
+            loggedIn = login.loginUser(loginUsername, loginPassword);
+            
+            String loginMessage = login.returnLoginStatus(loggedIn);
+            System.out.println(loginMessage);
+            
+            attempts++;
+            
+            if (!loggedIn && attempts < 3){
+                System.out.println("You have " + (3 - attempts) + " attemps(s)" +" remaining.");
+            }
+        }
         
-        if(loggedIn) {
+        if(!loggedIn) {
+            System.out.println("You have reached the maximum number of your login attempts.");
+        } else {
             //if the user has logged in successfully, we welcome them to the chatapp
             System.out.println("\nWelcome to ChatApp.");
+        }
+        if(loggedIn) {
             
             boolean running = true;
-            int totalMessagesSent = 0;
-            /*
-             an object of the message class is being created, 
-             so we can call its methods
-            */
-            
+            ArrayList<String> sentMessages = new ArrayList<>();
+       
             while(running) {
                 System.out.println("\n--------------------------------------");
                 //display the menu choices to the user
@@ -145,43 +163,50 @@ public class Main {
                         
                             System.out.println("\n=== Message " + messageNumber + " of " + numMessages + " ===");
                             
+                            msg = new Message(messageNumber, "", "");
+                            String messageID = msg.generateMessageID();
+                            System.out.println("Message ID: " + messageID);
+                            
                             //we are prompting the user to enter the number of the person or people they sending messages to
                             System.out.println("Enter recipient cell phone number(e.g. +27678907890): ");
                             String recipientCell = input.nextLine();
                             
+                            msg = new Message(messageNumber, recipientCell, "");
+                            
+                            if((recipientCell.startsWith("+27") && recipientCell.length() <=12)){
+                                System.out.println(msg.checkRecipientCell());
+                            }
                             //we are prompting the user to type the message they want to send
                             System.out.println("Enter your message(max 250 characters): ");
                             String messageText = input.nextLine();
                            
                             msg = new Message(messageNumber, recipientCell, messageText);
                             
-                            System.out.println(msg.checkMessageLength());
-                            
-                            if (messageText.length() > 250){
-                                
-                                System.out.println(msg.checkRecipientCell());
-                                
-                                String results = msg.sentMesssage();
-                                System.out.println(results);
+                            if (messageText.length() <= 250){
+                                System.out.println(msg.checkMessageLength());
                             }
                             
                             String result = msg.createMessageHash();
-                                System.out.println("\nMessage Hash: " + result);
+                            System.out.println("Message Hash: " + result);
                                 
                             System.out.println("\n------ MESSAGE DETAILS ------");
                             String Results = msg.printMessage();
-                                System.out.println(Results);
+                            System.out.println(Results);
+                            
+                            String Result = msg.sentMessage();
+                            System.out.println(Result);
                                 
-                            String Result = msg.sentMesssage();
-                                System.out.println(Result);
+                            sentMessages.add(msg.printMessage());
                         }
                         System.out.println("\n=====================================================");
-                        System.out.println("Total messages sent: " + msg.returnTotalMessages());
+                        System.out.println("Total messages sent: " + Message.returnTotalMessages());
                         
                         System.out.println("\n=== ALL SENT MESSAGES ===");
                         System.out.println("-------------------------------------");
-                        String Results = msg.printMessage();
-                        System.out.println(Results);
+                        for(String message : sentMessages) {
+                            System.out.println(message);
+                            System.out.println("-------------------------");
+                        }
                         break;
                      case 2: 
                         System.out.println("Comming Soon.");

@@ -16,15 +16,14 @@ package com.mycompany.mychatapp;
  * @author Student
  */
 public class Login {
+    //this is where the user will store their name
     String firstName;
-    
+    //this is where the user will store their surname
     String lastName;
     //this is where the user will store their user name
     String username;
-    
     //this is where the user will store their password
     String password;
-    
     //this is where the user will store their number
     String phoneNumber;
     //check whether the username is correct or not
@@ -74,7 +73,7 @@ public class Login {
    } 
    
    //checks whether the user details have been successfully registered
-   public String registerUser(String username, String password, String phoneNumber, String firstName, String lastName) {
+   public String registerUser(String username, String password, String phoneNumber) {
    
        /*
         *Confirms whether the user detials are correct,
@@ -97,7 +96,7 @@ public class Login {
        this.password = password;
        this.phoneNumber = phoneNumber;
        
-       return "User registered successfully.";
+       return "User registered successfully";
    }
    //allows the user to login using the same details as the registration details
    public boolean loginUser(String username, String password){
