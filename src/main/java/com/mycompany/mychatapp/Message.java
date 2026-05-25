@@ -53,8 +53,9 @@ public class Message {
         return messageID.length() <=10;
     }
     
+    //Validates the recipient cell phone number
     public String checkRecipientCell(){
-        
+        //The number must start with an international code(+27) and not exceed 12 characters
         if(recipientCell.startsWith("+27") && recipientCell.length() <=12){
             return"Cell phone number successfully captured.";
         }else{
@@ -70,12 +71,14 @@ public class Message {
             return"Message ready to send.";
       
         }else{
+            //Calculates how many characters exceed the given limit 
             int over = messageText.length() - 250;
             
             return "Message exceeds 250 characters by " + over + "; please reduce the size.";
         }
     }
-     
+    
+    //Creating a unique message hash
     public String createMessageHash(){
         //Taking the first two characters of the message ID
         String idPart = messageID.substring(0, 2);
@@ -90,7 +93,7 @@ public class Message {
         //return everything in capital letters
         return hash.toUpperCase();
     }
-    
+    //allows the user to choose what they want to do with their messages either to send, disregard, or store.
     public String sentMessage() {
         
         Scanner input = new Scanner(System.in);
@@ -102,24 +105,33 @@ public class Message {
         int option = input.nextInt();
         
         switch(option) {
+            //Messages gets sent successfully 
             case 1:
                 totalMessages++;
                 return"Message successfully sent";
+                
+            //message gets disregared    
             case 2:
                 return"Press 0 to delete the message";
+                
+            //message gets stored in a JSON file
             case 3:
                 storeMessage();
                 System.out.println("Mesage saved to messages.json.");
                 return"Message successfully stored";
+                
+            //Invalid slection option    
             default:
                 return"\nInvalid option. Please choose option 1, 2, or 3";    
         }
     }
     
+    //returns the total number of messages sent
     public static int returnTotalMessages() {
         return totalMessages;
     }
     
+    //displays all the message details 
     public String printMessage() {
         return "Message ID: " + messageID +
                 "\nMessage Hash: " + messageHash +
@@ -127,14 +139,20 @@ public class Message {
                 "\nMessage: " + messageText;
     }
     
+    /*
+    *Stores the message information inside a JSON file, using the org.json library
+    */
     //JSON library used: org.json
     //Source: https://mvnrepository.com/artifact/org.json/json 
     public void storeMessage() {  
+        
+        //creating a JSON object
         JSONObject obj = new JSONObject();
             obj.put("messageID", this.messageID); 
             obj.put("recipientCell", this.recipientCell); 
             obj.put("messageText",   this.messageText); 
-
+            
+        //FileWriter writes the JSON object into the messages.json file
         try (FileWriter fw = new FileWriter("messages.json", true)) {
             fw.write(obj.toString());
             fw.write("\n");
@@ -142,6 +160,8 @@ public class Message {
             fw.close();
             
         } catch (IOException e){
+            
+            //Display an error message if storing the message fails
             System.out.println("Error storing message: " + e.getMessage());
         }
    } 
